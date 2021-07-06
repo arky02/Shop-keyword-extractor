@@ -1,4 +1,5 @@
 #메인 파일
+#싱글로뽑기
 from selenium import webdriver
 import time
 import pandas as pd
@@ -111,11 +112,17 @@ def helpstore(wordlist):
         driver.implicitly_wait(1)
         input_btn.click()
         time.sleep(3)
-        if(float(driver.find_element_by_xpath("//*[@id='rate']").text)<15.00 and driver.find_element_by_xpath("//*[@id='sumCount']").text.find(',')!= -1):
-            globall.word_list[last_x] = driver.find_element_by_xpath("//*[@id='keywordBox']").text
-            globall.statistics_list[last_x] = driver.find_element_by_xpath("//*[@id='rate']").text
-            globall.click_list[last_x] = driver.find_element_by_xpath("//*[@id='sumCount']").text
-            print(driver.find_element_by_xpath("//*[@id='keywordBox']").text)
+
+        stats = driver.find_element_by_xpath("//*[@id='rate']").text
+        if (stats =="-"):
+            stats = 100
+
+        if(float(stats)<15.00 and driver.find_element_by_xpath("//*[@id='sumCount']").text.find(',')!= -1):
+            if driver.find_element_by_xpath("//*[@id='keywordBox']").text not in globall.word_list:
+                globall.word_list[last_x] = driver.find_element_by_xpath("//*[@id='keywordBox']").text
+                globall.statistics_list[last_x] = driver.find_element_by_xpath("//*[@id='rate']").text
+                globall.click_list[last_x] = driver.find_element_by_xpath("//*[@id='sumCount']").text
+                print(globall.word_list[last_x])
 
         # for로 LI의 개수만큼 클릭을 해야함
         def final_input_key():
@@ -123,11 +130,15 @@ def helpstore(wordlist):
             statisticss = driver.find_element_by_xpath("//*[@id='rate']").text
             clickk = driver.find_element_by_xpath("//*[@id='sumCount']").text
 
+            if(statisticss == '-'):
+                statisticss = 100
+
             if(float(statisticss)<15.00 and clickk.find(',')!= -1):
-                print(driver.find_element_by_xpath("//*[@id='keywordBox']").text)
-                globall.word_list[last_x + x] = wordd
-                globall.statistics_list[last_x + x] = statisticss
-                globall.click_list[last_x + x] = clickk
+                if wordd not in globall.word_list:
+                    globall.word_list[last_x + x] = wordd
+                    globall.statistics_list[last_x + x] = statisticss
+                    globall.click_list[last_x + x] = clickk
+                    print(globall.word_list[last_x + x])
 
 
 
@@ -138,7 +149,8 @@ def helpstore(wordlist):
                 # print(globall.word_list[x+1])
                 keyword.click()
                 driver.implicitly_wait(5)
-                time.sleep(7)
+                #element = WebDriverWait(driver,10).until_not(lambda x:x.find_element_by_xpath())
+                time.sleep(10)
                 #wait = WebDriverWait(driver,10)
                 driver.switch_to_window(driver.window_handles[1])
                 # 15미만 1000 이상
