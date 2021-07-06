@@ -1,4 +1,5 @@
 # 멀티로 빠르게 뽑기
+#네이버 카테고리 조정만 해서 쓰면 됨!
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 import time
@@ -35,19 +36,18 @@ def smartstore():
     driver.maximize_window()
     cate1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/span")
     cate1.click()
-    category1 = driver.find_element_by_xpath(
-        "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[2]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
+    category1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[1]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
     category1.click()
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span")
     cate2.click()
-    category2 = driver.find_element_by_xpath(
-        "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[6]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[1]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
-    cate3 = driver.find_element_by_xpath("//*[@ id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span")
-    cate3.click()
-    category3 = driver.find_element_by_xpath(
-        "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[3]/ul/li[1]/a")  # 세번째 분야에 원하는 목록위치!!!!!!!
-    category3.click()
+    #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span")
+    #cate3.click()
+    #category3 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[3]/ul/li[1]/a")  # 세번째 분야에 원하는 목록위치!!!!!!!
+    #category3.click()
+    btn = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/a")
+    btn.click()
 
     while True:
         time.sleep(0.5)
@@ -61,7 +61,7 @@ def smartstore():
             item_num, item_name = x.find_element_by_tag_name('a').text.split('\n')  # ['숫자','이름']
             top500_list[item_num] = item_name
 
-        if (int(pagenum) == 1):
+        if (int(pagenum) == 25):
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
@@ -108,24 +108,16 @@ def helpstore(top500list):
     value = top500list.values()
     top500_valuelist = list(value) #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
 
-    for y in range(0, len(top500list)-1):
-        print(y)
-        if y == int(len(top500list))-1:
-            print("end")
-            wb = openpyxl.Workbook()
-            sheet = wb.active
-            sheet.append(globall.keywordlist_final)
-            sheet.append(globall.keyclicklist_final)
-            sheet.append(globall.keystatslist_final)
-            wb.save('keyword_list.xlsx')
+    for y in range(0, len(top500list)):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
+        print(y)#만약 20개면 y가 19까지는 프린트 되어야함
 
         driver.switch_to_window(driver.window_handles[0])
         driver.implicitly_wait(1)
         driver.find_element_by_xpath("//*[@id='q']").clear()
         input_text.send_keys(top500_valuelist[y])#톱오백키워드입력칸
-        driver.implicitly_wait(1)
         input_btn.click()
-        time.sleep(5)
+        driver.implicitly_wait(3)
+        time.sleep(8)
 
         relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
         # print(keyword_words)
@@ -179,8 +171,18 @@ def helpstore(top500list):
         # difference = list(SetList2.difference(SetList1))
         # globall.keywordlist_final = globall.keywordlist_final+difference
         # print(globall.keywordlist_final)
-
         # for로 LI의 개수만큼 클릭을 해야함
+
+        if y == (int(len(top500list))-1):
+            print("end")
+            wb = openpyxl.Workbook()
+            sheet = wb.active
+            sheet.append(globall.keywordlist_final)
+            sheet.append(globall.keyclicklist_final)
+            sheet.append(globall.keystatslist_final)
+            wb.save('keyword_list.xlsx')
+
+
 
 
 smartstore()
