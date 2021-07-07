@@ -14,7 +14,7 @@ import xlwt
 
 from selenium.webdriver.support.wait import WebDriverWait
 
-import globall
+import Global
 import os
 
 top500_list = {}
@@ -48,7 +48,7 @@ def smartstore():
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span") #두번째 카테고리 선택위해 누르기
     cate2.click()
     #*** 두번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[1]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[2]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
     #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span") #세번째 카테고리 선택위해 누르기
     #cate3.click()
@@ -70,7 +70,7 @@ def smartstore():
             item_num, item_name = x.find_element_by_tag_name('a').text.split('\n')  # ['숫자','이름']
             top500_list[item_num] = item_name
 
-        if (int(pagenum) == 10):
+        if (int(pagenum) == 25):
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
@@ -83,6 +83,7 @@ def smartstore():
 def helpstore(top500list):
     #스마트스토어에서 톱500키워드 뽑은거 헬프스토어로 넘김
     #헬프스토어
+    global relword_list
     url = "http://helpstore.shop/"
     header = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
@@ -127,25 +128,54 @@ def helpstore(top500list):
     for y in range(0, len(top500list)):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
         print(y)#만약 20개면 y가 19까지는 프린트 되어야함
 
+#여기가 [0]으로 넘어와서 톱500리스트 목차 하나하나씩 싱글에서 입력하는 코드
+
+        #[0]으로 넘어감
         driver.switch_to.window(driver.window_handles[0])
         driver.implicitly_wait(1)
-        driver.find_element_by_xpath("//*[@id='q']").clear()
-        input_text.send_keys(top500_valuelist[y])#톱오백키워드입력칸
-        input_btn.click()
-        driver.implicitly_wait(3)
-        time.sleep(8)
-
-        relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
-        # print(keyword_words)
-        relword_list = relword_words.split()#relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
-        if globall.isFirst:
-            driver.execute_script('window.open("http://helpstore.shop/mkeyword");')
-            driver.switch_to.window(driver.window_handles[1])
-            globall.isFirst = False
-            time.sleep(0.5)
+        #기존의 입력칸 지우고 톱500 단어리스트 하나하나씩 입력 - 싱글모드
+        if Global.isFirst:
+            driver.find_element_by_xpath("//*[@id='q']").clear()
+            input_text.send_keys(top500_valuelist[y])  # 톱오백키워드입력칸
+            input_btn.click()
             driver.implicitly_wait(3)
-            popup_btn = driver.find_element_by_xpath("//*[@id='btnHelpNeverShow']")
-            popup_btn.click()
+            time.sleep(5)
+            # getRelWordLists
+            relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
+            relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
+
+
+            while len(relword_list) ==0:
+                time.sleep(1)
+
+            if len(relword_list) !=0:
+                driver.find_element_by_xpath("//*[@id='q']").clear()
+                input_text.send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
+                input_btn.click()
+                driver.execute_script('window.open("http://helpstore.shop/mkeyword");')
+                driver.switch_to.window(driver.window_handles[1])
+                Global.isFirst = False
+                time.sleep(0.5)
+                driver.implicitly_wait(3)
+                popup_btn = driver.find_element_by_xpath("//*[@id='btnHelpNeverShow']")
+                popup_btn.click()
+
+
+        else:
+            while len(relword_list) ==0:
+                time.sleep(1)
+
+            if len(relword_list) != 0:
+                #로딩이 다 되었는지 확인
+                relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
+                relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
+                driver.find_element_by_xpath("//*[@id='q']").clear()
+                input_text.send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
+                input_btn.click()
+#
+
+#여기서부터는 이제 멀티로 키워드 따다닥 입력 코드
+
 
         driver.switch_to.window(driver.window_handles[1])
         # driver.switch_to_window(driver.window_handles[1])
@@ -167,16 +197,16 @@ def helpstore(top500list):
                     click = driver.find_element_by_xpath("//*[@id='dataList']/tr[" + num + "]/td[5]").text
                     if float(stats) < 15.00 and click.find(',')!= -1:
                         name = driver.find_element_by_xpath("//*[@id='dataList']/tr[" + num + "]/td[2]").text
-                        if name not in globall.keywordlist_final:
-                            globall.keywordlist_final.append(name) #최종리스트에저장. 필터링 다 거친 단어/경쟁강도/클릭수: 키!
-                            globall.keystatslist_final.append(stats)
-                            globall.keyclicklist_final.append(click)
+                        if name not in Global.keywordlist_final:
+                            Global.keywordlist_final.append(name) #최종리스트에저장. 필터링 다 거친 단어/경쟁강도/클릭수: 키!
+                            Global.keystatslist_final.append(stats)
+                            Global.keyclicklist_final.append(click)
                             #print(globall.keywordlist_final)
 
                 except Exception as e:
                     driver.refresh()
                     driver.switch_to.window(driver.window_handles[0])
-                    print(globall.keywordlist_final)
+                    print(Global.keywordlist_final)
                     # 필터링까지 마친 최종리스트 3개!
                     break
 
@@ -193,9 +223,9 @@ def helpstore(top500list):
             print("end")
             wb = openpyxl.Workbook()
             sheet = wb.active
-            sheet.append(globall.keywordlist_final)
-            sheet.append(globall.keyclicklist_final)
-            sheet.append(globall.keystatslist_final)
+            sheet.append(Global.keywordlist_final)
+            sheet.append(Global.keyclicklist_final)
+            sheet.append(Global.keystatslist_final)
             wb.save('keyword_list.xlsx')
 
 

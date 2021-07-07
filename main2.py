@@ -1,6 +1,6 @@
 from selenium import webdriver
 import time
-import globall
+import Global
 
 #스마트스토어
 url = "https://datalab.naver.com/shoppingInsight/sCategory.naver"
@@ -21,7 +21,7 @@ while True:
 
     for x in rank_list:
         item_num,item_name = x.find_element_by_tag_name('a').text.split('\n')    #['숫자','이름']
-        globall.top500_list[item_num] = item_name
+        Global.top500_list[item_num] = item_name
 
     if(int(pagenum) ==25):
         driver.close()
@@ -31,6 +31,6 @@ while True:
         break
 
     driver.find_element_by_class_name('btn_page_next').click()
-    print(globall.top500_list)
+    print(Global.top500_list)
 
 

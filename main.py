@@ -14,7 +14,7 @@ import xlwt
 
 from selenium.webdriver.support.wait import WebDriverWait
 
-import globall
+import Global
 import os
 
 top500_list ={}
@@ -102,9 +102,9 @@ def helpstore(wordlist):
         if y == len(wordlist):
             wb = openpyxl.Workbook()
             sheet = wb.active
-            sheet.append(list(globall.word_list.values()))
-            sheet.append(list(globall.statistics_list.values()))
-            sheet.append(list(globall.click_list.values()))
+            sheet.append(list(Global.word_list.values()))
+            sheet.append(list(Global.statistics_list.values()))
+            sheet.append(list(Global.click_list.values()))
             wb.save('keyword_list.xlsx')
 
         driver.find_element_by_xpath("//*[@id='q']").clear()
@@ -118,11 +118,11 @@ def helpstore(wordlist):
             stats = 100
 
         if(float(stats)<15.00 and driver.find_element_by_xpath("//*[@id='sumCount']").text.find(',')!= -1):
-            if driver.find_element_by_xpath("//*[@id='keywordBox']").text not in globall.word_list:
-                globall.word_list[last_x] = driver.find_element_by_xpath("//*[@id='keywordBox']").text
-                globall.statistics_list[last_x] = driver.find_element_by_xpath("//*[@id='rate']").text
-                globall.click_list[last_x] = driver.find_element_by_xpath("//*[@id='sumCount']").text
-                print(globall.word_list[last_x])
+            if driver.find_element_by_xpath("//*[@id='keywordBox']").text not in Global.word_list:
+                Global.word_list[last_x] = driver.find_element_by_xpath("//*[@id='keywordBox']").text
+                Global.statistics_list[last_x] = driver.find_element_by_xpath("//*[@id='rate']").text
+                Global.click_list[last_x] = driver.find_element_by_xpath("//*[@id='sumCount']").text
+                print(Global.word_list[last_x])
 
         # for로 LI의 개수만큼 클릭을 해야함
         def final_input_key():
@@ -134,11 +134,11 @@ def helpstore(wordlist):
                 statisticss = 100
 
             if(float(statisticss)<15.00 and clickk.find(',')!= -1):
-                if wordd not in globall.word_list:
-                    globall.word_list[last_x + x] = wordd
-                    globall.statistics_list[last_x + x] = statisticss
-                    globall.click_list[last_x + x] = clickk
-                    print(globall.word_list[last_x + x])
+                if wordd not in Global.word_list:
+                    Global.word_list[last_x + x] = wordd
+                    Global.statistics_list[last_x + x] = statisticss
+                    Global.click_list[last_x + x] = clickk
+                    print(Global.word_list[last_x + x])
 
 
 
@@ -164,9 +164,9 @@ def helpstore(wordlist):
             except Exception as e:
                 driver.switch_to_window(driver.window_handles[0])
                 #필터링까지 마친 최종리스트 3개!
-                print(list(globall.word_list.values()))
-                print(list(globall.statistics_list.values()))
-                print(list(globall.click_list.values()))
+                print(list(Global.word_list.values()))
+                print(list(Global.statistics_list.values()))
+                print(list(Global.click_list.values()))
                 last_x += int(x)
                 break
 

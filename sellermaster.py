@@ -1,6 +1,6 @@
 from selenium import webdriver
 import time
-import globall
+import Global
 
 url = "https://whereispost.com/seller/#/"
 header = {

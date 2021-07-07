@@ -1,6 +1,6 @@
 from selenium import webdriver
 import time
-import globall
+import Global
 
 url = "http://helpstore.shop/"
 header = {
@@ -29,39 +29,39 @@ popup_btn.click()
 #keyword_real_copy_btn = driver.find_element_by_xpath("//*[@id='myModal']/div/div[1]/span")
 input_text = driver.find_element_by_xpath("//*[@id='q']")
 input_btn = driver.find_element_by_xpath("//*[@id='searchBtn']")
-print(globall.top500_list)
-print(len(globall.top500_list))
+print(Global.top500_list)
+print(len(Global.top500_list))
 
-for y in range(1,len(globall.top500_list)):
+for y in range(1, len(Global.top500_list)):
 
 
-    input_text.send_keys(globall.top500_list[y])
+    input_text.send_keys(Global.top500_list[y])
     driver.implicitly_wait(1)
     input_btn.click()
     driver.implicitly_wait(5)
 
-    globall.word_list[0] = driver.find_element_by_xpath("//*[@id='keywordBox']").text
-    globall.statistics_list[0] = driver.find_element_by_xpath("//*[@id='rate']").text
+    Global.word_list[0] = driver.find_element_by_xpath("//*[@id='keywordBox']").text
+    Global.statistics_list[0] = driver.find_element_by_xpath("//*[@id='rate']").text
     #for로 LI의 개수만큼 클릭을 해야함
 
     for x in range(1,100):
         try:
             num = "{}".format(x)
             keyword = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']/span["+num+"]")
-            globall.word_list[x+1] = keyword.text
+            Global.word_list[x + 1] = keyword.text
             #print(globall.word_list[x+1])
             keyword.click()
             time.sleep(3)
             driver.switch_to_window(driver.window_handles[1])
-            globall.statistics_list[x+1] = driver.find_element_by_xpath("//*[@id='rate']").text
+            Global.statistics_list[x + 1] = driver.find_element_by_xpath("//*[@id='rate']").text
             #print(globall.statistics_list[x+1])
             driver.close()
             driver.switch_to_window(driver.window_handles[0])
             #globall.word_list[x] = driver.find_element_by_xpath("//*[@id='keywordBox']").text
 
         except Exception as e:
-            print(globall.word_list)
-            print(globall.statistics_list)
+            print(Global.word_list)
+            print(Global.statistics_list)
             break
 
 #//*[@id="relkey"]/li[1]/a
