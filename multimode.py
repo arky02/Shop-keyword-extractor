@@ -44,7 +44,7 @@ def smartstore():
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span") #두번째 카테고리 선택위해 누르기
     cate2.click()
     #*** 두번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[1]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[2]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
     #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span") #세번째 카테고리 선택위해 누르기
     #cate3.click()
@@ -75,7 +75,7 @@ def smartstore():
             top500_list[item_num] = item_name
 
         # TODO 2(2). 1-25페이지 end 범위정하기(8/8/9: 1-8/9-17/18-25)
-        if (int(pagenum) == 15): #첫번째: 8, 두번째: 17, 세번째: 25
+        if (int(pagenum) == 10): #첫번째: 8, 두번째: 17, 세번째: 25
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
@@ -131,7 +131,7 @@ def helpstore(top500list):
     value = top500list.values()
     top500_valuelist = list(value) #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
 
-    for y in range(0, len(top500list)):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
+    for y in range(0, len(top500list)-1):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
         #if (didWorkWell == False):
         #    time.sleep(7)
 
@@ -231,7 +231,7 @@ def helpstore(top500list):
         # print(globall.keywordlist_final)
         # for로 LI의 개수만큼 클릭을 해야함
 
-        if y == (int(len(top500list))-1):
+        if y == (int(len(top500list))-2):
             print("end")
             wb = openpyxl.Workbook()
             sheet = wb.active
