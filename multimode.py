@@ -1,7 +1,6 @@
 # 멀티로 빠르게 뽑기
 #네이버 카테고리 조정만 해서 쓰면 됨!
 from selenium import webdriver
-from selenium.webdriver import ActionChains
 import time
 import pandas as pd
 import openpyxl
@@ -32,6 +31,13 @@ def smartstore():
     driver = webdriver.Chrome()
     driver.implicitly_wait(3)
     driver.get(url)
+    try:
+        result = driver.switch_to.alert()
+        result.accept()
+        result.dismiss()
+
+    except:
+        "There is no alert"
     html = driver.page_source
     driver.maximize_window()
     cate1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/span") #첫번째 카테고리 선택위해 누르기
@@ -64,7 +70,7 @@ def smartstore():
             item_num, item_name = x.find_element_by_tag_name('a').text.split('\n')  # ['숫자','이름']
             top500_list[item_num] = item_name
 
-        if (int(pagenum) == 25):
+        if (int(pagenum) == 10):
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
@@ -84,6 +90,13 @@ def helpstore(top500list):
     driver = webdriver.Chrome()
     driver.implicitly_wait(3)
     driver.get(url)
+    try:
+        result = driver.switch_to.alert()
+        result.accept()
+        result.dismiss()
+
+    except:
+        "There is no alert"
     html = driver.page_source
     driver.maximize_window()
 
@@ -114,7 +127,7 @@ def helpstore(top500list):
     for y in range(0, len(top500list)):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
         print(y)#만약 20개면 y가 19까지는 프린트 되어야함
 
-        driver.switch_to_window(driver.window_handles[0])
+        driver.switch_to.window(driver.window_handles[0])
         driver.implicitly_wait(1)
         driver.find_element_by_xpath("//*[@id='q']").clear()
         input_text.send_keys(top500_valuelist[y])#톱오백키워드입력칸
@@ -127,20 +140,20 @@ def helpstore(top500list):
         relword_list = relword_words.split()#relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
         if globall.isFirst:
             driver.execute_script('window.open("http://helpstore.shop/mkeyword");')
-            driver.switch_to_window(driver.window_handles[1])
+            driver.switch_to.window(driver.window_handles[1])
             globall.isFirst = False
             time.sleep(0.5)
             driver.implicitly_wait(3)
             popup_btn = driver.find_element_by_xpath("//*[@id='btnHelpNeverShow']")
             popup_btn.click()
 
-        driver.switch_to_window(driver.window_handles[1])
+        driver.switch_to.window(driver.window_handles[1])
         # driver.switch_to_window(driver.window_handles[1])
         input_relwordlist = driver.find_element_by_xpath("//*[@id='q']")#멀티 키워드 뽑는페이지의 텍스트 입력칸
 
         for a in range(0, int(len(relword_list)) - 1):
             if (a == int(len(relword_list) - 1)):
-                driver.switch_to_window(driver.window_handles[0])
+                driver.switch_to.window(driver.window_handles[0])
                 break
             input_relwordlist.send_keys(relword_list[a])
             driver.find_element_by_xpath("//*[@id='searchBtn']").click()
@@ -162,13 +175,13 @@ def helpstore(top500list):
 
                 except Exception as e:
                     driver.refresh()
-                    driver.switch_to_window(driver.window_handles[0])
+                    driver.switch_to.window(driver.window_handles[0])
                     print(globall.keywordlist_final)
                     # 필터링까지 마친 최종리스트 3개!
                     break
 
         # print(relword_list)
-        driver.switch_to_window(driver.window_handles[0])
+        driver.switch_to.window(driver.window_handles[0])
         # SetList2 = set(relword_list)
         # SetList1 = set(globall.keywordlist_final)
         # difference = list(SetList2.difference(SetList1))
