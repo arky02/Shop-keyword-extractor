@@ -146,9 +146,10 @@ def helpstore(top500list):
 
 
             while len(relword_list) ==0:
-                time.sleep(3)
                 driver.refresh()
-                time.sleep(1)
+                time.sleep(5)
+                relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
+                relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
 
             if len(relword_list) !=0:
                 driver.find_element_by_xpath("//*[@id='q']").clear()
