@@ -54,13 +54,11 @@ def smartstore():
     btn = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/a")
     btn.click()
 
-    #TODO 2(1). 1-25페이지 start 범위정하기(8/8/9: 1-8/9-17/18-25)
-    start_btn = driver.find_element_by_xpath("//*[@id ='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a[2]")
-    for x in range(1,10): #건너 뛸 곳/ 처음(1-8)일때: 주석처리하기, 두번째(9-17)일때: range(1,9), 세번째(18-25)일때: range(1,18)
-        time.sleep(0.3)
-        start_btn.click()
-    #
-
+    #TODO 2(1). 1-25페이지 start 범위정하기(12/13: 1-12/13-25)
+    #start_btn = driver.find_element_by_xpath("//*[@id ='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a[2]")
+    #for x in range(1,10): #건너 뛸 곳/ 처음(1-12)일때: 주석처리하기, 두번째(13-25)일때: range(1,13)
+    #   time.sleep(0.3)
+    #   start_btn.click()
 
     while True:
         time.sleep(0.5)
@@ -74,8 +72,8 @@ def smartstore():
             item_num, item_name = x.find_element_by_tag_name('a').text.split('\n')  # ['숫자','이름']
             top500_list[item_num] = item_name
 
-        # TODO 2(2). 1-25페이지 end 범위정하기(8/8/9: 1-8/9-17/18-25)
-        if (int(pagenum) == 10): #첫번째: 8, 두번째: 17, 세번째: 25
+        # TODO 2(2). 1-25페이지 end 범위정하기(12/13: 1-12/13-25)
+        if (int(pagenum) == 10): #첫번째: 12, 두번째: 25
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
