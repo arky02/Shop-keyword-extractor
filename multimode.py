@@ -87,6 +87,7 @@ def helpstore(top500list):
     #스마트스토어에서 톱500키워드 뽑은거 헬프스토어로 넘김
     #헬프스토어
     global relword_list
+    didWorkWell = True
     url = "http://helpstore.shop/"
     header = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
@@ -129,9 +130,11 @@ def helpstore(top500list):
     top500_valuelist = list(value) #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
 
     for y in range(0, len(top500list)):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
-        print(y)#만약 20개면 y가 19까지는 프린트 되어야함
+        if (didWorkWell == False):
+            time.sleep(7)
 
-#여기가 [0]으로 넘어와서 톱500리스트 목차 하나하나씩 싱글에서 입력하는 코드
+        print(y)  # 만약 20개면 y가 19까지는 프린트 되어야함
+        didWorkWell = False
 
         #[0]으로 넘어감
         driver.switch_to.window(driver.window_handles[0])
@@ -160,9 +163,8 @@ def helpstore(top500list):
             popup_btn = driver.find_element_by_xpath("//*[@id='btnHelpNeverShow']")
             popup_btn.click()
 
-
         else:
-            time.sleep(0.5)
+            time.sleep(1)
             wait = WebDriverWait(driver, 10)
             element = wait.until(EC.element_to_be_clickable((By.XPATH,"//*[@id='shoppingKeywordCopy']")))
             relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
@@ -173,7 +175,6 @@ def helpstore(top500list):
             driver.find_element_by_xpath("//*[@id='q']").clear()
             driver.find_element_by_xpath("//*[@id='q']").send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
             input_btn.click()
-#
 
 #여기서부터는 이제 멀티로 키워드 따다닥 입력 코드
 
@@ -184,6 +185,7 @@ def helpstore(top500list):
 
         for a in range(0, int(len(relword_list)) - 1):
             if (a == int(len(relword_list) - 1)):
+                didWorkWell = True
                 driver.switch_to.window(driver.window_handles[0])
                 break
             input_relwordlist.send_keys(relword_list[a])
