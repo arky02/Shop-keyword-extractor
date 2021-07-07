@@ -162,13 +162,13 @@ def helpstore(top500list):
 
 
         else:
+            relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
+            relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
             while len(relword_list) ==0:
                 time.sleep(1)
 
             if len(relword_list) != 0:
                 #로딩이 다 되었는지 확인
-                relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
-                relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
                 driver.find_element_by_xpath("//*[@id='q']").clear()
                 input_text.send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
                 input_btn.click()
