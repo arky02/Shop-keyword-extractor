@@ -75,7 +75,7 @@ def smartstore():
             top500_list[item_num] = item_name
 
         # TODO 2(2). 1-25페이지 end 범위정하기(8/8/9: 1-8/9-17/18-25)
-        if (int(pagenum) == 25): #첫번째: 8, 두번째: 17, 세번째: 25
+        if (int(pagenum) == 15): #첫번째: 8, 두번째: 17, 세번째: 25
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
