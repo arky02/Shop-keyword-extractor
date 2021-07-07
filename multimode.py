@@ -2,19 +2,10 @@
 #네이버 카테고리 조정만 해서 쓰면 됨!
 from selenium import webdriver
 import time
-import pandas as pd
 import openpyxl
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import numpy
-from pandas import DataFrame
-from pandas import Series
-from pandas import ExcelFile
-from pandas import concat
-from pandas import merge
-import xlwt
-
 from selenium.webdriver.support.wait import WebDriverWait
 
 import Global
@@ -23,7 +14,7 @@ import os
 top500_list = {}
 global last_x
 
-
+#TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
     # 스마트스토어
     url = "https://datalab.naver.com/shoppingInsight/sCategory.naver"
@@ -45,13 +36,15 @@ def smartstore():
     driver.maximize_window()
     cate1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/span") #첫번째 카테고리 선택위해 누르기
     cate1.click()
+
+    #TODO 1. 카테고리체인지
     #*** 첫번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
     category1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[1]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
     category1.click()
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span") #두번째 카테고리 선택위해 누르기
     cate2.click()
     #*** 두번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[2]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[1]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
     #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span") #세번째 카테고리 선택위해 누르기
     #cate3.click()
@@ -60,6 +53,14 @@ def smartstore():
     #category3.click()
     btn = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/a")
     btn.click()
+
+    #TODO 2(1). 1-25페이지 start 범위정하기(8/8/9: 1-8/9-17/18-25)
+    start_btn = driver.find_element_by_xpath("//*[@id ='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a[2]")
+    for x in range(1,10): #건너 뛸 곳/ 처음(1-8)일때: 주석처리하기, 두번째(9-17)일때: range(1,9), 세번째(18-25)일때: range(1,18)
+        time.sleep(0.3)
+        start_btn.click()
+    #
+
 
     while True:
         time.sleep(0.5)
@@ -73,7 +74,8 @@ def smartstore():
             item_num, item_name = x.find_element_by_tag_name('a').text.split('\n')  # ['숫자','이름']
             top500_list[item_num] = item_name
 
-        if (int(pagenum) == 25):
+        # TODO 2(2). 1-25페이지 end 범위정하기(8/8/9: 1-8/9-17/18-25)
+        if (int(pagenum) == 25): #첫번째: 8, 두번째: 17, 세번째: 25
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
@@ -130,14 +132,21 @@ def helpstore(top500list):
     top500_valuelist = list(value) #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
 
     for y in range(0, len(top500list)):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
-        if (didWorkWell == False):
-            time.sleep(7)
+        #if (didWorkWell == False):
+        #    time.sleep(7)
 
         print(y)  # 만약 20개면 y가 19까지는 프린트 되어야함
-        didWorkWell = False
+        #didWorkWell = False
 
         #[0]으로 넘어감
         driver.switch_to.window(driver.window_handles[0])
+        try:
+            result = driver.switch_to.alert()
+            result.accept()
+            result.dismiss()
+
+        except:
+            "There is no alert"
         driver.implicitly_wait(1)
         #기존의 입력칸 지우고 톱500 단어리스트 하나하나씩 입력 - 싱글모드
         if Global.isFirst:
@@ -164,7 +173,7 @@ def helpstore(top500list):
             popup_btn.click()
 
         else:
-            time.sleep(1)
+            time.sleep(2)
             wait = WebDriverWait(driver, 10)
             element = wait.until(EC.element_to_be_clickable((By.XPATH,"//*[@id='shoppingKeywordCopy']")))
             relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
@@ -185,7 +194,7 @@ def helpstore(top500list):
 
         for a in range(0, int(len(relword_list)) - 1):
             if (a == int(len(relword_list) - 1)):
-                didWorkWell = True
+                #didWorkWell = True
                 driver.switch_to.window(driver.window_handles[0])
                 break
             input_relwordlist.send_keys(relword_list[a])
