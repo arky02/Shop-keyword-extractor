@@ -4,6 +4,9 @@ from selenium import webdriver
 import time
 import pandas as pd
 import openpyxl
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import numpy
 from pandas import DataFrame
 from pandas import Series
@@ -135,49 +138,41 @@ def helpstore(top500list):
         driver.implicitly_wait(1)
         #기존의 입력칸 지우고 톱500 단어리스트 하나하나씩 입력 - 싱글모드
         if Global.isFirst:
-            driver.find_element_by_xpath("//*[@id='q']").clear()
+            input_text.clear()
             input_text.send_keys(top500_valuelist[y])  # 톱오백키워드입력칸
             input_btn.click()
             driver.implicitly_wait(3)
-            time.sleep(5)
+            time.sleep(8)
+            wait = WebDriverWait(driver, 10)
+            element = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='shoppingKeywordCopy']")))
             # getRelWordLists
             relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
             relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
-
-
-            while len(relword_list) ==0:
-                driver.refresh()
-                time.sleep(5)
-                relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
-                relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
-
-            if len(relword_list) !=0:
-                driver.find_element_by_xpath("//*[@id='q']").clear()
-                input_text.send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
-                input_btn.click()
-                driver.execute_script('window.open("http://helpstore.shop/mkeyword");')
-                driver.switch_to.window(driver.window_handles[1])
-                Global.isFirst = False
-                time.sleep(0.5)
-                driver.implicitly_wait(3)
-                popup_btn = driver.find_element_by_xpath("//*[@id='btnHelpNeverShow']")
-                popup_btn.click()
+            driver.implicitly_wait(2)
+            driver.find_element_by_xpath("//*[@id='q']").clear()
+            driver.find_element_by_xpath("//*[@id='q']").send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
+            input_btn.click()
+            driver.execute_script('window.open("http://helpstore.shop/mkeyword");')
+            driver.switch_to.window(driver.window_handles[1])
+            Global.isFirst = False
+            time.sleep(0.5)
+            driver.implicitly_wait(3)
+            popup_btn = driver.find_element_by_xpath("//*[@id='btnHelpNeverShow']")
+            popup_btn.click()
 
 
         else:
+            time.sleep(0.5)
+            wait = WebDriverWait(driver, 10)
+            element = wait.until(EC.element_to_be_clickable((By.XPATH,"//*[@id='shoppingKeywordCopy']")))
             relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
             relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
-            while len(relword_list) ==0:
-                driver.refresh()
-                time.sleep(5)
-                relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
-                relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
 
-            if len(relword_list) != 0:
                 #로딩이 다 되었는지 확인
-                driver.find_element_by_xpath("//*[@id='q']").clear()
-                input_text.send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
-                input_btn.click()
+            driver.implicitly_wait(2)
+            driver.find_element_by_xpath("//*[@id='q']").clear()
+            driver.find_element_by_xpath("//*[@id='q']").send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
+            input_btn.click()
 #
 
 #여기서부터는 이제 멀티로 키워드 따다닥 입력 코드
