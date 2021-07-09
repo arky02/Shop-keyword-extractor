@@ -13,18 +13,25 @@ import os
 
 top500_list = {}
 global last_x
+mode = 2
 
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
+
     # 스마트스토어
     url = "https://datalab.naver.com/shoppingInsight/sCategory.naver"
     header = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
     # DRIVER_PATH = './user/PycharmProjects/pythonProject/chromedriver_win32/chromedriver.exe'
-
     driver = webdriver.Chrome()
     driver.implicitly_wait(3)
     driver.get(url)
+
+    if mode == 1:
+        pagenum_mode = 12
+    else:
+        pagenum_mode = 25
+
     try:
         result = driver.switch_to.alert()
         result.accept()
@@ -39,26 +46,27 @@ def smartstore():
 
     #TODO 1. 카테고리체인지
     #*** 첫번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[1]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
+    category1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[2]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
     category1.click()
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span") #두번째 카테고리 선택위해 누르기
     cate2.click()
     #*** 두번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[4]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[3]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
     #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span") #세번째 카테고리 선택위해 누르기
     #cate3.click()
     #*** 세번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    #category3 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[3]/ul/li[1]/a")  # 세번째 분야에 원하는 목록위치!!!!!!!
+    #category3 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[3]/ul/li["+cate3+"]/a")  # 세번째 분야에 원하는 목록위치!!!!!!!
     #category3.click()
     btn = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/a")
     btn.click()
 
     #TODO 2(1). 1-25페이지 start 범위정하기(12/13: 1-12/13-25)
-    #start_btn = driver.find_element_by_xpath("//*[@id ='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a[2]")
-    #for x in range(1,10): #건너 뛸 곳/ 처음(1-12)일때: 주석처리하기, 두번째(13-25)일때: range(1,13)
-    #   time.sleep(0.3)
-    #   start_btn.click()
+    if mode == 2:
+        start_btn = driver.find_element_by_xpath("//*[@id ='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a[2]")
+        for x in range(1, 13):  # 건너 뛸 곳/ 처음(1-12)일때: 주석처리하기, 두번째(13-25)일때: range(1,13)
+            time.sleep(0.1)
+            start_btn.click()
 
     while True:
         time.sleep(0.5)
@@ -73,7 +81,7 @@ def smartstore():
             top500_list[item_num] = item_name
 
         # TODO 2(2). 1-25페이지 end 범위정하기(12/13: 1-12/13-25)
-        if (int(pagenum) == 10): #첫번째: 12, 두번째: 25
+        if (int(pagenum) == pagenum_mode): #첫번째: 12, 두번째: 25
             print(top500_list)
             driver.close()
             # os.system("python helpstore.py")
