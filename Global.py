@@ -3,9 +3,10 @@ keyword_list ={}
 word_list= {}
 statistics_list={}
 click_list = {}
-keywordlist_final = [] #찐최종
-keyclicklist_final = []
-keystatslist_final = []
+keyWordList_final = [] #찐최종
+keyClickList_final = []
+keyStatsList_final = []
+keyAmountList_final = []
 isFirst = True
 
 

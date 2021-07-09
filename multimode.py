@@ -15,6 +15,8 @@ top500_list = {}
 global last_x
 mode = 2
 
+#221
+
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
 
@@ -215,35 +217,29 @@ def helpstore(top500list):
                     click = driver.find_element_by_xpath("//*[@id='dataList']/tr[" + num + "]/td[5]").text
                     if float(stats) < 15.00 and click.find(',')!= -1:
                         name = driver.find_element_by_xpath("//*[@id='dataList']/tr[" + num + "]/td[2]").text
-                        if name not in Global.keywordlist_final:
-                            Global.keywordlist_final.append(name) #최종리스트에저장. 필터링 다 거친 단어/경쟁강도/클릭수: 키!
-                            Global.keystatslist_final.append(stats)
-                            Global.keyclicklist_final.append(click)
-                            #print(globall.keywordlist_final)
+                        amount = driver.find_element_by_xpath("//*[@id='dataList']/tr[" + num + "]/td[6]").text
+                        if name not in Global.keyWordList_final:
+                            Global.keyWordList_final.append(name) #최종리스트에저장. 필터링 다 거친 단어/경쟁강도/클릭수: 키!
+                            Global.keyStatsList_final.append(stats)
+                            Global.keyClickList_final.append(click)
+                            Global.keyAmountList_final.append(amount)
 
                 except Exception as e:
                     driver.refresh()
                     driver.switch_to.window(driver.window_handles[0])
-                    print(Global.keywordlist_final)
+                    print(Global.keyWordList_final)
                     # 필터링까지 마친 최종리스트 3개!
                     break
-
-        # print(relword_list)
         driver.switch_to.window(driver.window_handles[0])
-        # SetList2 = set(relword_list)
-        # SetList1 = set(globall.keywordlist_final)
-        # difference = list(SetList2.difference(SetList1))
-        # globall.keywordlist_final = globall.keywordlist_final+difference
-        # print(globall.keywordlist_final)
-        # for로 LI의 개수만큼 클릭을 해야함
 
         if y == (int(len(top500list))-2):
             print("end")
             wb = openpyxl.Workbook()
             sheet = wb.active
-            sheet.append(Global.keywordlist_final)
-            sheet.append(Global.keyclicklist_final)
-            sheet.append(Global.keystatslist_final)
+            sheet.append(Global.keyWordList_final)
+            sheet.append(Global.keyClickList_final)
+            sheet.append(Global.keyStatsList_final)
+            sheet.append(Global.keyAmountList_final)
             wb.save('keyword_list.xlsx')
 
 
