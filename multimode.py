@@ -13,7 +13,7 @@ import os
 
 top500_list = {}
 global last_x
-mode = 2
+mode = 1
 
 #221
 
@@ -53,7 +53,7 @@ def smartstore():
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span") #두번째 카테고리 선택위해 누르기
     cate2.click()
     #*** 두번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[3]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[5]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
     #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span") #세번째 카테고리 선택위해 누르기
     #cate3.click()
@@ -66,7 +66,7 @@ def smartstore():
     #TODO 2(1). 1-25페이지 start 범위정하기(12/13: 1-12/13-25)
     if mode == 2:
         start_btn = driver.find_element_by_xpath("//*[@id ='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a[2]")
-        for x in range(1, 13):  # 건너 뛸 곳/ 처음(1-12)일때: 주석처리하기, 두번째(13-25)일때: range(1,13)
+        for x in range(1, 14):  # 건너 뛸 곳/ 처음(1-12)일때: 주석처리하기, 두번째(13-25)일때: range(1,13)
             time.sleep(0.1)
             start_btn.click()
 
