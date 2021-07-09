@@ -13,9 +13,7 @@ import os
 
 top500_list = {}
 global last_x
-mode = 1
-
-#221
+mode = 2
 
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
