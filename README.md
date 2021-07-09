@@ -3,7 +3,7 @@
 
 - 키워드(소싱 적합 상품 이름), 경쟁강도, 조회수, 업로드 되어있는 상품 수 추출 
 
-컴퓨터에 크롬 버전에 맞는 google chrome driver 설치하고 파이참 프로젝트 폴더(클론된 폴더)에 chromedriver.exe파일 집어넣기
+*프로그램 실행 위한 필수적인 추가 사전 작업: 컴퓨터에 크롬 버전에 맞는 google chrome driver 설치하고 파이참 프로젝트 폴더(클론된 폴더)에 chromedriver.exe파일 집어넣기/ 혹은 파이참에서 프로젝트에 이미 있는 chromedriver.exe파일 찾아서 chromedriver_win32 밖으로 빼기
 
 --> 진행순서안내:
 1. 크롬버전확인
