@@ -105,7 +105,7 @@ def helpstore(wordlist):
             sheet.append(list(Global.word_list.values()))
             sheet.append(list(Global.statistics_list.values()))
             sheet.append(list(Global.click_list.values()))
-            wb.save('keyword_list.xlsx')
+            wb.save('2-10-1.xlsx')
 
         driver.find_element_by_xpath("//*[@id='q']").clear()
         input_text.send_keys(valuelist[y])

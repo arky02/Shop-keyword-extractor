@@ -1,5 +1,7 @@
 # 멀티로 빠르게 뽑기
 #네이버 카테고리 조정만 해서 쓰면 됨!
+#조정해야할 것 : mode, category(첫 install 이면 크롬드라이버 버전)
+
 from selenium import webdriver
 import time
 import openpyxl
@@ -13,7 +15,7 @@ import os
 
 top500_list = {}
 global last_x
-mode = 2
+mode = 0
 
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
@@ -46,12 +48,12 @@ def smartstore():
 
     #TODO 1. 카테고리체인지
     #*** 첫번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[2]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
+    category1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[#]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
     category1.click()
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span") #두번째 카테고리 선택위해 누르기
     cate2.click()
     #*** 두번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[5]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[#]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
     #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span") #세번째 카테고리 선택위해 누르기
     #cate3.click()
@@ -165,7 +167,9 @@ def helpstore(top500list):
             element = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='shoppingKeywordCopy']")))
             # getRelWordLists
             relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
-            relword_list = relword_words.split()  # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
+            relword_list1= relword_words.split()
+            relword_list = [word.strip('/') for word in relword_list1]
+            # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
             driver.implicitly_wait(2)
             driver.find_element_by_xpath("//*[@id='q']").clear()
             driver.find_element_by_xpath("//*[@id='q']").send_keys(top500_valuelist[y+1])  # 톱오백키워드입력칸
