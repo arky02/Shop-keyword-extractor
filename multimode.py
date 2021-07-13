@@ -1,6 +1,6 @@
 # 멀티로 빠르게 뽑기
 #네이버 카테고리 조정만 해서 쓰면 됨!
-#조정해야할 것 : mode, category(첫 install 이면 크롬드라이버 버전)
+#조정해야할 것 : mode, cat1, cat2
 
 from selenium import webdriver
 import time
@@ -9,12 +9,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
 import Global
 import os
 
 top500_list = {}
 global last_x
+#cat1-cat2-mode 형태로 저장됨
+cat1 = 0
+cat2 = 0
 mode = 0
 
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
@@ -48,12 +50,14 @@ def smartstore():
 
     #TODO 1. 카테고리체인지
     #*** 첫번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category1 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[#]/a")  # 첫번째 분야에 원하는 목록위치!!!!!!!
+    cat1_address = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li["+str(cat1)+"]/a"
+    category1 = driver.find_element_by_xpath(cat1_address)  # 첫번째 분야에 원하는 목록위치!!!!!!!
     category1.click()
     cate2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/span") #두번째 카테고리 선택위해 누르기
     cate2.click()
     #*** 두번째 카테고리 - 맨마지막 li[] 부분만 바꾸면됨. list index(순서에맞춰서)
-    category2 = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[#]/a")  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
+    cat2_address = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li["+str(cat2)+"]/a"
+    category2 = driver.find_element_by_xpath(cat2_address)  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
     category2.click()
     #cate3 = driver.find_element_by_xpath("//*[@id="content"]/div[2]/div/div[1]/div/div/div[1]/div/div[3]/span") #세번째 카테고리 선택위해 누르기
     #cate3.click()
@@ -137,8 +141,8 @@ def helpstore(top500list):
     input_btn = driver.find_element_by_xpath("//*[@id='searchBtn']")
     print(len(top500list)) #네이버 톱500리스트-딕셔너리형태
     value = top500list.values()
-    top500_valuelist = list(value) #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
-
+    top500_valuelist = [word.strip("/") for word in list(value)] #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
+    print(top500_valuelist)
     for y in range(0, len(top500list)-1):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
         #if (didWorkWell == False):
         #    time.sleep(7)
@@ -167,8 +171,7 @@ def helpstore(top500list):
             element = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='shoppingKeywordCopy']")))
             # getRelWordLists
             relword_words = driver.find_element_by_xpath("//*[@id='shoppingKeywordLayer']").text
-            relword_list1= relword_words.split()
-            relword_list = [word.strip('/') for word in relword_list1]
+            relword_list =  relword_words.split()
             # relword_list: 톱500상품이름 검색했을 때 연관검색어들 리스트목록
             driver.implicitly_wait(2)
             driver.find_element_by_xpath("//*[@id='q']").clear()
@@ -242,7 +245,8 @@ def helpstore(top500list):
             sheet.append(Global.keyClickList_final)
             sheet.append(Global.keyStatsList_final)
             sheet.append(Global.keyAmountList_final)
-            wb.save('keyword_list.xlsx')
+            save_name = str(cat1)+'-'+str(cat2)+'-'+str(mode)
+            wb.save(save_name)
 
 
 
