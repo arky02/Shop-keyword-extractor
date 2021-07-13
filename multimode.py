@@ -15,9 +15,9 @@ import os
 top500_list = {}
 global last_x
 #cat1-cat2-mode 형태로 저장됨
-cat1 = 0
-cat2 = 0
-mode = 0
+cat1 = 2
+cat2 = 14
+mode = 2
 
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
@@ -245,7 +245,7 @@ def helpstore(top500list):
             sheet.append(Global.keyClickList_final)
             sheet.append(Global.keyStatsList_final)
             sheet.append(Global.keyAmountList_final)
-            save_name = str(cat1)+'-'+str(cat2)+'-'+str(mode)
+            save_name = str(cat1)+'-'+str(cat2)+'('+str(mode)+').xlsx'
             wb.save(save_name)
 
 
