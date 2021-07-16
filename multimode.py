@@ -14,10 +14,10 @@ import os
 
 top500_list = {}
 global last_x
-#cat1-cat2-mode 형태로 저장됨
-cat1 = 2
-cat2 = 14
-mode = 2
+#cat1-cat2(mode) 형태로 저장됨
+cat1 = 0
+cat2 = 0
+mode = 0
 
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
@@ -30,6 +30,7 @@ def smartstore():
     driver = webdriver.Chrome()
     driver.implicitly_wait(3)
     driver.get(url)
+    chracters = "/\?"
 
     if mode == 1:
         pagenum_mode = 12
@@ -77,13 +78,15 @@ def smartstore():
     while True:
         time.sleep(0.5)
 
-        pagenum = driver.find_element_by_xpath(
-            "//*[@id='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/span/em").text
-        rank_list = driver.find_elements_by_xpath(
-            "//*[@id='content']/div[2]/div/div[2]/div[2]/div/div/div[1]/ul/li")  # 아직까지는 아나ㅣㅁ
+        pagenum = driver.find_element_by_xpath("//*[@id='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/span/em").text
+        rank_list = driver.find_elements_by_xpath("//*[@id='content']/div[2]/div/div[2]/div[2]/div/div/div[1]/ul/li")  # 아직까지는 아나ㅣㅁ
 
         for x in rank_list:
             item_num, item_name = x.find_element_by_tag_name('a').text.split('\n')  # ['숫자','이름']
+
+            for y in range(len(chracters)):
+                item_name = item_name.replace(chracters[y], "")
+
             top500_list[item_num] = item_name
 
         # TODO 2(2). 1-25페이지 end 범위정하기(12/13: 1-12/13-25)
@@ -95,7 +98,6 @@ def smartstore():
             break
 
         driver.find_element_by_class_name('btn_page_next').click()
-
 
 def helpstore(top500list):
     #스마트스토어에서 톱500키워드 뽑은거 헬프스토어로 넘김
@@ -140,8 +142,8 @@ def helpstore(top500list):
     input_text = driver.find_element_by_xpath("//*[@id='q']")
     input_btn = driver.find_element_by_xpath("//*[@id='searchBtn']")
     print(len(top500list)) #네이버 톱500리스트-딕셔너리형태
-    value = top500list.values()
-    top500_valuelist = [word.strip("/") for word in list(value)] #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
+    top500_valuelist = list(top500list.values())
+    #벨류리스트: 네이버 톱500리스트의 키워드이름만(500개 딕셔너리형태에서 벨류추출)
     print(top500_valuelist)
     for y in range(0, len(top500list)-1):#딱 저기 끝이 되면 딱 꺼지는건가?그런거같아보임. 딱 끝이되면 나가짐 실행안되고,, 미만인건가??궁금하네
         #if (didWorkWell == False):
