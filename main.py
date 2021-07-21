@@ -56,7 +56,7 @@ def smartstore():
         if(int(pagenum) ==1):
             print(top500_list)
             driver.close()
-            #os.system("python helpstore.py")
+            #os.system("python singlemode.py")
             helpstore(top500_list)
             break
 

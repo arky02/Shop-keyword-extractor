@@ -1,4 +1,4 @@
-# 멀티로 빠르게 뽑기
+# 멀티로 빠르게 뽑기 - 반반 나눠서
 #네이버 카테고리 조정만 해서 쓰면 됨!
 #조정해야할 것 : mode, cat1, cat2
 
@@ -71,6 +71,7 @@ def smartstore():
     #TODO 2(1). 1-25페이지 start 범위정하기(12/13: 1-12/13-25)
     if mode == 2:
         start_btn = driver.find_element_by_xpath("//*[@id ='content']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a[2]")
+
         for x in range(1, 14):  # 건너 뛸 곳/ 처음(1-12)일때: 주석처리하기, 두번째(13-25)일때: range(1,13)
             time.sleep(0.1)
             start_btn.click()
@@ -93,7 +94,7 @@ def smartstore():
         if (int(pagenum) == pagenum_mode): #첫번째: 12, 두번째: 25
             print(top500_list)
             driver.close()
-            # os.system("python helpstore.py")
+            # os.system("python singlemode.py")
             helpstore(top500_list)
             break
 
