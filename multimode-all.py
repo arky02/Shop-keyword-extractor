@@ -1,6 +1,6 @@
 # 멀티로 빠르게 뽑기 - 500개 한번에
-#네이버 카테고리 조정만 해서 쓰면 됨!
-#조정해야할 것 : cat1, cat2
+#네이버 카테고리 조정해서 쓰기
+#need to modify : cat1, cat2
 
 from selenium import webdriver
 import time
@@ -16,8 +16,8 @@ top500_list = {}
 global last_x
 
 #cat1-cat2 형태로 저장됨(한번에 500개)
-cat1 = 8
-cat2 = 4
+cat1 = 0
+cat2 = 0
 
 #TODO 내일  didWorkWell불리언 만들어서 로딩안되서 그냥 막 넘어가는거 제대로 work안된거면  sleep하도록 하기
 def smartstore():
