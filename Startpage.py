@@ -5,17 +5,10 @@ import os
 import _thread
 import threading
 import time
+import Global
 
-START_CATENUM = 0
-END_CATNUM = START_CATENUM+2
-
-
-for x in range(START_CATENUM,END_CATNUM):
-
-
-    thread = threading.Thread
-    thread.start_new_thread(os.system("python singlemode.py"), ())
-
+for _ in range (1,12):
+    os.system("python multimode-all.py")
+    Global.cat3 += 1
+    Global.cat4 = 1
     time.sleep(10)
-
-
