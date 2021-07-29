@@ -7,7 +7,7 @@ import threading
 import time
 import Global
 
-for _ in range (1,12):
+for _ in range (1,20):
     os.system("python multimode-all.py")
     Global.cat3 += 1
     Global.cat4 = 1

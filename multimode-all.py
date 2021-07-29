@@ -17,9 +17,6 @@ global last_x
 chracters = "/\?"
 
 
-# 0으로 하면 건너뜀.
-
-
 def naverShoppingDatalab():
     # 스마트스토어
     url = "https://datalab.naver.com/shoppingInsight/sCategory.naver"
@@ -44,7 +41,7 @@ def naverShoppingDatalab():
     cate1.click()
     cat1_address = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[1]/ul/li[" + str(Global.cat1) + "]/a"
     category1 = driver.find_element_by_xpath(cat1_address)  # 첫번째 분야에 원하는 목록위치!!!!!!!
-    Global.cat1_name = category1.text
+    Global.cat1_name = "1."+category1.text
     category1.click()
 
     try:
@@ -54,7 +51,7 @@ def naverShoppingDatalab():
         cat2_address = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[2]/ul/li[" + str(
             Global.cat2) + "]/a"
         category2 = driver.find_element_by_xpath(cat2_address)  # 두번째 분야에 원하는 목록위치!!!!!!!!!!
-        Global.cat2_name = category2.text
+        Global.cat2_name = "2."+category2.text
         category2.click()
     except Exception as E:
         Global.cat1 += 1
@@ -70,7 +67,7 @@ def naverShoppingDatalab():
             cate3.click()
             cat3_adress = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[3]/ul/li[" + str(Global.cat3) + "]/a"
             category3 = driver.find_element_by_xpath(cat3_adress)  # 세번째 분야에 원하는 목록위치!!!!!!!
-            Global.cat3_name = category3.text
+            Global.cat3_name = "3."+category3.text
             category3.click()
         except Exception as E:
             Global.cat2 += 1
@@ -86,7 +83,7 @@ def naverShoppingDatalab():
             cat4_adress = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/div[4]/ul/li[" + str(
                 Global.cat4) + "]/a"
             category4 = driver.find_element_by_xpath(cat4_adress)  # 세번째 분야에 원하는 목록위치!!!!!!!
-            Global.cat4_name = category4.text
+            Global.cat4_name = "4."+category4.text
             category4.click()
             getNaverTop500List(driver, True)
             Global.cat4 += 1
@@ -121,6 +118,9 @@ def getNaverTop500List(driver, isCat4Exist):
         if int(pagenum) == 25:
             print("top500list: ")
             print(top500_list)
+            print(Global.cat1)
+            print(Global.cat2)
+            print(Global.cat3)
             driver.close()
             # os.system("python singlemode.py")
             helpstore(top500_list, isCat4Exist)
@@ -259,6 +259,13 @@ def helpstore(top500list, isCat4Exist):
                             Global.keyClickList_final.append(click)
                             Global.keyAmountList_final.append(amount)
 
+                            if float(stats) < 1.5:
+                                Global.keyWordList_final2.append(name)  # 최종리스트에저장. 필터링 다 거친 단어/경쟁강도/클릭수: 키!
+                                Global.keyStatsList_final2.append(stats)
+                                Global.keyClickList_final2.append(click)
+                                Global.keyAmountList_final2.append(amount)
+
+
                 except Exception as e:
                     driver.refresh()
                     driver.switch_to.window(driver.window_handles[0])
@@ -279,7 +286,7 @@ def helpstore(top500list, isCat4Exist):
             sheet.append(Global.keyAmountList_final)
 
             if not isCat4Exist:
-                categoryName = { Global.cat1_name,  Global.cat2_name, Global.cat3_name, "(4번째 카테고리 X)"}
+                categoryName = { Global.cat1_name,  Global.cat2_name, Global.cat3_name}
                 sheet.append(list(categoryName))
                 save_name = str(Global.cat1) + '-' + str(Global.cat2) + '-' + str(Global.cat3) + '.xlsx'
                 Global.cat3 += 1
@@ -289,6 +296,11 @@ def helpstore(top500list, isCat4Exist):
                 sheet.append(list(categoryName))
                 save_name = str(Global.cat1) + '-' + str(Global.cat2) + '-' + str(Global.cat3) + '-' + str(
                     Global.cat4) + '.xlsx'
+
+            sheet.append(Global.keyWordList_final2)
+            sheet.append(Global.keyClickList_final2)
+            sheet.append(Global.keyStatsList_final2)
+            sheet.append(Global.keyAmountList_final2)
 
             wb.save(save_name)
             driver.quit()
