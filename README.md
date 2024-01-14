@@ -11,7 +11,7 @@
 ## How to Use
 ### * 프로그램 실행을 위한 필수적인 추가 사전 작업
   1. 컴퓨터에 크롬 버전에 맞는 google chrome driver 설치
-  2. PyCharm 프로젝트 폴더(클론된 폴더)에 chromedriver.exe파일 집어넣기 혹은 PyCharm에서 프로젝트에 이미 있는 chromedriver.exe파일 찾아서 chromedriver_win32 밖으로 빼기
+  2. PyCharm 프로젝트 폴더(클론된 폴더)에 chromedriver.exe파일 삽입 or PyCharm에서 프로젝트에 이미 있는 chromedriver.exe파일 찾아서 chromedriver_win32 밖으로 빼기
 
 ### -> 진행 순서 안내:
 1. 크롬버전확인
