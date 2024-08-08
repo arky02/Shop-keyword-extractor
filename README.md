@@ -1,4 +1,4 @@
-# Shopping Keyword extractor
+# ShoppingMall Keyword extractor
 쇼핑몰에서의 상품 소싱을 위한 인기검색어 (키워드) 자동 추출 매크로 프로그램 (네이버 데이터랩, 헬프스토어)
 
 ## What can we extract using this extractor?
